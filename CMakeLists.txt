@@ -3,7 +3,9 @@ project(flower_game)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 add_subdirectory(lib/SFML/)
-target_link_libraries(${PROJECT_NAME} PUBLIC sfml-audio sfml-network sfml-graphics sfml-window sfml-system)
+add_subdirectory(common)
+add_subdirectory(logic)
+
