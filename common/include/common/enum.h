@@ -1,9 +1,17 @@
+#pragma once
+
 namespace flower::common
 {
     enum Direction {
         LEFT,
         RIGHT,
         UP,
-        DOWN
+        DOWN,
+        MOTIONLESS
+    };
+
+    enum SnakeState{
+        READY,
+        STAND
     };
 }

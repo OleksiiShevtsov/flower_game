@@ -1,7 +1,7 @@
 project(common)
 
 file(GLOB COMMON_INCLUDES CONFIGURE_DEPENDS
-  "common/*.h"
+    "common/*.h"
 )
 
 add_library(${PROJECT_NAME} INTERFACE ${COMMON_INCLUDES})

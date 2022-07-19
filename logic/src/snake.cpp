@@ -1,4 +1,5 @@
-#ifndef SNAKE_CPP
-#define SNAKE_CPP
+#include "logic/snake.h"
 
-#endif // SNAKE_CPP
+
+
+
