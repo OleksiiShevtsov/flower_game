@@ -6,6 +6,5 @@ int main()
 
     gameLogic.startGame();
 
-
     return 0;
 }

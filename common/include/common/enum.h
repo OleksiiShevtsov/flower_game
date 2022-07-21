@@ -2,8 +2,8 @@
 
 namespace flower::common
 {
-    enum Direction {
-        LEFT,
+    enum DirectionSnake {
+        LEFT = 0,
         RIGHT,
         UP,
         DOWN,

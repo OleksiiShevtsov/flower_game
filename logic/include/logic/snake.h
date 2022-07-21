@@ -24,9 +24,14 @@ namespace flower {
 
         Snake( common::Coordinate x, common::Coordinate y ) :
             m_snakeState{ common::SnakeState::READY },
-            m_currentDirection{ common::Direction::MOTIONLESS },
-            m_pastDirection{ common::Direction::MOTIONLESS },
-            m_posturePastDirection{ common::Direction::MOTIONLESS }{
+            m_pastDirectionSnake{ common::DirectionSnake::MOTIONLESS },
+            m_posturePastDirectionSnake{ common::DirectionSnake::MOTIONLESS }{
+
+            srand(time(NULL));
+            m_currentDirectionSnake = static_cast< common::DirectionSnake >( rand() % 4 );
+            m_tail.push_back( Item{ x, y } );
+            m_tail.push_back( Item{ x, y } );
+            m_tail.push_back( Item{ x, y } );
             m_tail.push_back( Item{ x, y } );
         }
 
@@ -42,25 +47,38 @@ namespace flower {
             return m_snakeState;
         }
 
-        // TODO
+        // TODO to GameLogic
         void getAvailableDirection(){
             m_availableDirection.clear();
-            m_availableDirection.push_back( common::Direction::LEFT );
-            m_availableDirection.push_back( common::Direction::RIGHT );
-            m_availableDirection.push_back( common::Direction::UP );
-            m_availableDirection.push_back( common::Direction::DOWN );
+            if( m_currentDirectionSnake != common::DirectionSnake::LEFT ){
+                m_availableDirection.push_back( common::DirectionSnake::RIGHT );
+            }
+            if( m_currentDirectionSnake != common::DirectionSnake::RIGHT ){
+                m_availableDirection.push_back( common::DirectionSnake::LEFT );
+            }
+            if( m_currentDirectionSnake != common::DirectionSnake::UP ){
+                m_availableDirection.push_back( common::DirectionSnake::DOWN );
+            }
+            if( m_currentDirectionSnake != common::DirectionSnake::DOWN ){
+                m_availableDirection.push_back( common::DirectionSnake::UP );
+            }
 
             srand(time(NULL));
-            m_currentDirection = m_availableDirection[ rand() % m_availableDirection.size() ];
+
+            m_posturePastDirectionSnake = m_pastDirectionSnake;
+            m_pastDirectionSnake = m_currentDirectionSnake;
+            m_currentDirectionSnake = m_availableDirection[ rand() % m_availableDirection.size() ];
         }
 
         // TODO move to drow Class
         void drowSnake( std::shared_ptr<sf::RenderWindow> window ){
-            sf::RectangleShape rectangle;
-            rectangle.setSize(sf::Vector2f( common::GlobalSettings::sizePixel, common::GlobalSettings::sizePixel ) );
-            rectangle.setFillColor(sf::Color( 200, 100, 100 ));
-            rectangle.move(sf::Vector2f( m_tail[0].x * common::GlobalSettings::sizePixel, m_tail[0].y * common::GlobalSettings::sizePixel ) );
-            window->draw(rectangle);
+            for ( auto &item : m_tail ){
+                sf::RectangleShape rectangle;
+                rectangle.setSize(sf::Vector2f( common::GlobalSettings::sizePixel, common::GlobalSettings::sizePixel ) );
+                rectangle.setFillColor(sf::Color( 200, 100, 100 ));
+                rectangle.move(sf::Vector2f( item.x * common::GlobalSettings::sizePixel, item.y * common::GlobalSettings::sizePixel ) );
+                window->draw(rectangle);
+            }
         }
 
         void snakeWaiting(){
@@ -72,12 +90,12 @@ namespace flower {
         void move(){
 
             getAvailableDirection();
-            switch ( m_currentDirection )
+            switch ( m_currentDirectionSnake )
             {
-                case common::Direction::LEFT: movingItem( -1, 0 ); break;
-                case common::Direction::RIGHT: movingItem( 1, 0 ); break;
-                case common::Direction::UP: movingItem( 0, 1 ); break;
-                case common::Direction::DOWN: movingItem( 0, -1 ); break;
+                case common::DirectionSnake::LEFT: movingItem( -1, 0 ); break;
+                case common::DirectionSnake::RIGHT: movingItem( 1, 0 ); break;
+                case common::DirectionSnake::UP: movingItem( 0, 1 ); break;
+                case common::DirectionSnake::DOWN: movingItem( 0, -1 ); break;
             }
         }
 
@@ -127,10 +145,10 @@ namespace flower {
 
         std::vector< Item > m_tail;
         common::SnakeState m_snakeState;
-        common::Direction m_currentDirection;
-        common::Direction m_pastDirection;
-        common::Direction m_posturePastDirection;
-        std::vector<common::Direction> m_availableDirection;
+        common::DirectionSnake m_currentDirectionSnake;
+        common::DirectionSnake m_pastDirectionSnake;
+        common::DirectionSnake m_posturePastDirectionSnake;
+        std::vector<common::DirectionSnake> m_availableDirection;
         std::unique_ptr<std::thread> m_waitingForNextDirection;
     };
 }
